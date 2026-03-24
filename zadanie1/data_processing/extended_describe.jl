@@ -32,7 +32,7 @@ function add_more_metrics(df::DataFrame)
 end
 
 
-function mode_helper(col) #if the value is not "missing" but just empty
+function mode_helper(col) #  the value can sometimes be not "missing" but just empty
     vals = collect(skipmissing(col))
     if isempty(vals)
         return missing
