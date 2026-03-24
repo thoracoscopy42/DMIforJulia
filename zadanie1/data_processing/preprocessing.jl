@@ -1,7 +1,7 @@
 
 #SECTION - Main function 
 
-function prepare_for_modeling!(df::DataFrame)
+function prepare_for_modeling!(df::DataFrame, config::Dict)
 
     divided_columns = split_columns_by_type(df)
 
@@ -46,10 +46,12 @@ end
 
 function detect_outliers_iqr(df::DataFrame, cols::Vector{Symbol})
     
+
 end
 
 function remove_outliers_iqr!(df::DataFrame, cols::Vector{Symbol})
     
+
 end
 
 # !missing values
@@ -72,4 +74,13 @@ end
 
 function normalize_minmax!(df::DataFrame, cols::Vector{Symbol})
 
+end
+
+# !helpers
+
+function map_col_by_dict(df::DataFrame,col::Symbol,dict::Dict)
+
+    df[!,col] = get.(Ref(dict), df[!,col], missing)
+
+    return df
 end
