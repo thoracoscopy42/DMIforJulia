@@ -46,11 +46,12 @@ end
 
 function detect_outliers_iqr(df::DataFrame, cols::Vector{Symbol})
     
-
+    
 end
 
 function remove_outliers_iqr!(df::DataFrame, cols::Vector{Symbol})
     
+
 
 end
 
