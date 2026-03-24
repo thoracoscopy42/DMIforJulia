@@ -6,7 +6,7 @@ using CairoMakie
 include("data_processing/loader.jl")
 include("data_processing/extended_describe.jl")
 include("data_processing/plotting.jl")
-
+include("data_processing/preprocessing.jl")
 
 # ładujemy dane z csv
 df= load_file("SalariesInDataScience.csv")
