@@ -7,8 +7,6 @@ function profile_dataset(df::DataFrame)
     return ext_desc, size_val
 end
 
-##################################################
-##################################################
 function dataset_size(df::DataFrame)
     size_val = (nrow(df), ncol(df))
     return size_val
