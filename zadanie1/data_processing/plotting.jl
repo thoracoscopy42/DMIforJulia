@@ -11,7 +11,7 @@ function plot_histogram(df::DataFrame, col; bins=30, title=nothing)
         fig[1,1],
         title = isnothing(title) ? "Histogram: $(col)" : title,
         xlabel = string(col),
-        ylabel = "Liczność"
+        ylabel = "Count"
         )
 
     hist!(ax, col_in_use, bins=bins)
@@ -19,7 +19,7 @@ function plot_histogram(df::DataFrame, col; bins=30, title=nothing)
     return fig
 end
 
-function plot_boxplot(df::DataFrame, feature, target; title=nothing)
+function plot_boxplot(df::DataFrame, feature, target; title=nothing, group_order=nothing)
     valid_rows = .!ismissing.(df[!, feature]) .& .!ismissing.(df[!, target])
     
     feature_vals = df[valid_rows, feature]
@@ -29,7 +29,8 @@ function plot_boxplot(df::DataFrame, feature, target; title=nothing)
     target_label  = replace(string(target),  "_" => " ")
 
 
-    groups = unique(feature_vals)
+    groups = isnothing(group_order) ? unique(feature_vals) : group_order
+
     x_positions = [findfirst(==(x), groups) for x in feature_vals]
 
     fig = Figure(size=(900,600))
