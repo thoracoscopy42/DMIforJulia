@@ -18,15 +18,18 @@ profile, size = profile_dataset(df)
 # wybieramy kolumnę salary_in_usd jako nasz target
 # typeof(df[!,:salary_in_usd]) # <- zwróci nam typ Vector{Int64}
 
-fig1 = plot_histogram(df, :salary_in_usd, bins=30)
-save("plots/salary_histogram.svg", fig1)
+# fig1 = plot_histogram(df, :salary_in_usd, bins=30)
+# save("plots/salary_histogram.svg", fig1)
 
-fig2 = plot_boxplot(df, :experience_level, :salary_in_usd)
-save("plots/experience_vs_salary.svg", fig2)
+# fig2 = plot_boxplot(df, :experience_level, :salary_in_usd)
+# save("plots/experience_vs_salary.svg", fig2)
 
-fig3 = plot_boxplot(df, :remote_ratio, :salary_in_usd)
-save("plots/remote_vs_salary.svg", fig3)
+# fig3 = plot_boxplot(df, :remote_ratio, :salary_in_usd)
+# save("plots/remote_vs_salary.svg", fig3)
 
-display(fig1)
-display(fig2)
-display(fig3)
+# display(fig1)
+# display(fig2)
+# display(fig3)
+
+cols = split_columns_by_type(df)
+cols.numeric
