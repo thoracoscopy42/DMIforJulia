@@ -47,6 +47,10 @@ map_col_by_dict(df, :company_size, company_size)
 job_titles = load_dict_from_csv("job_titles.csv")
 map_col_by_dict(df, :job_title, job_titles)
 
+map_col_by_dict(df, :company_location, location)
+
 dropmissing!(df)
 # profile_dataset(df)
 unique(df[!, :company_location])
+
+

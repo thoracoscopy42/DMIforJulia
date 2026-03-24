@@ -18,6 +18,14 @@ company_size = Dict(
     "L" => 3
 )
 
-# location = Dict(
+location = Dict(
+    "North America" => 1,
+    "Europe"        => 1,
 
-# )
+    "Asia"          => 2,
+    "South America" => 2,
+
+    "Oceania"       => 3,
+    "Africa"        => 3,
+)
+
