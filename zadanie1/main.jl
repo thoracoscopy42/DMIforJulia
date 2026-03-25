@@ -40,17 +40,24 @@ countries = load_dict_from_csv("countries.csv")
 map_col_by_dict(df, :company_location, countries)
 
 include("dictionaries.jl")
+
 map_col_by_dict(df, :experience_level, experience)
 map_col_by_dict(df, :employment_type, employment)
 map_col_by_dict(df, :company_size, company_size)
 
 job_titles = load_dict_from_csv("job_titles.csv")
 map_col_by_dict(df, :job_title, job_titles)
-
 map_col_by_dict(df, :company_location, location)
 
 dropmissing!(df)
+cols = split_columns_by_type(df)
+outlier_candidates = [:salary_in_usd]
+outlier_mask  = detect_outliers_iqr(df, outlier_candidates)
+
 # profile_dataset(df)
-unique(df[!, :company_location])
+# unique(df[!, :company_location])
 
 
+println(nrow(df))
+remove_outliers_iqr!(df, outlier_candidates)
+println(nrow(df))

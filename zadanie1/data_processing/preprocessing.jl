@@ -45,14 +45,39 @@ end
 
 
 function detect_outliers_iqr(df::DataFrame, cols::Vector{Symbol})
-    
-    
+    outlier_mask = falses(nrow(df))
+
+    for col in cols
+
+        x = df[!, col]
+
+        q1 = quantile(x, 0.25)
+        q3 = quantile(x, 0.75)
+
+        iqr = q3 - q1
+
+        lower = q1 - iqr * 1.5
+        upper = q3 + iqr * 1.5
+
+        col_mask = (x .< lower) .| (x .> upper)
+
+        
+        outlier_mask .|= col_mask
+    end
+
+    return outlier_mask
 end
 
 function remove_outliers_iqr!(df::DataFrame, cols::Vector{Symbol})
-    
 
+    outlier_mask = detect_outliers_iqr(df, cols)
 
+    filtered_df = df[.!outlier_mask, :]
+
+    empty!(df)
+    append!(df, filtered_df)
+
+    return df
 end
 
 # !missing values
