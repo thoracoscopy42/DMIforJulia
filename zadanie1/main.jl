@@ -45,7 +45,7 @@ countries = load_dict_from_csv("countries.csv")
 job_titles = load_dict_from_csv("job_titles.csv")
 
 
-# SECTION - 6 kolumn - ordinal encoding, 2 kolumny- one hot encoding
+# SECTION - ordinal encoding oraz one hot encoding
 #           przed encodingiem - ["work_year", "experience_level", "employment_type", "job_title", "salary_in_usd", "remote_ratio", "company_location", "company_size"]
 ordinal_encode!(df, :experience_level, experience)
 ordinal_encode!(df, :company_location, countries)
@@ -54,6 +54,8 @@ ordinal_encode!(df, :company_location, location)
 ordinal_encode!(df, :company_size, company_size)
 ordinal_encode!(df, :job_title, job_titles)
 ordinal_encode!(df, :remote_ratio, remote)
+
+df[!, :remote_ratio_plot] = copy(df[!, :remote_ratio]) # kopia kolumny do późniejszego wykresu 
 
 one_hot_encode!(df, :job_title)
 one_hot_encode!(df, :remote_ratio)
@@ -84,24 +86,76 @@ add_log_column!(df, :salary_in_usd, :salary_log)
 
 standardize_columns!(df, [:salary_in_usd, :salary_log])
 
-# SECTION - wykresy po preprocessingu
+# SECTION - wstępne wykresy po preprocessingu #FIXME - :DDDDDD
 
-fig_after_1 = plot_histogram(df, :salary_in_usd, bins=30)
-save("plots/after/salary_standardized_histogram.svg", fig_after_1)
+# fig_after_1 = plot_histogram(df, :salary_in_usd, bins=30)
+# save("plots/after/salary_standardized_histogram.svg", fig_after_1)
 
-fig_after_2 = plot_histogram(df, :salary_log, bins=30)
-save("plots/after/salary_log_standardized_histogram.svg", fig_after_2)
+# fig_after_2 = plot_histogram(df, :salary_log, bins=30)
+# save("plots/after/salary_log_standardized_histogram.svg", fig_after_2)
 
-job_cols = filter(col -> startswith(String(col), "job_title_"), Symbol.(names(df)))
-job_counts = [sum(df[!, col]) for col in job_cols]
-job_labels = replace.(String.(job_cols), "job_title_" => "")
+# job_cols = filter(col -> startswith(String(col), "job_title_"), Symbol.(names(df)))
+# job_counts = [sum(df[!, col]) for col in job_cols]
+# job_labels = replace.(String.(job_cols), "job_title_" => "")
 
-fig_after_3 = Figure()
-ax = Axis(fig_after_3[1, 1], xticks=(1:length(job_labels), job_labels), xticklabelrotation=pi/4)
-barplot!(ax, 1:length(job_labels), job_counts)
+# fig_after_3 = Figure()
+# ax = Axis(fig_after_3[1, 1], xticks=(1:length(job_labels), job_labels), xticklabelrotation=pi/4)
+# barplot!(ax, 1:length(job_labels), job_counts)
 
-save("plots/after/job_title_onehot_counts.svg", fig_after_3)
+# save("plots/after/job_title_onehot_counts.svg", fig_after_3)
 
-display(fig_after_1)
-display(fig_after_2)
-display(fig_after_3)
+# display(fig_after_1)
+# display(fig_after_2)
+# display(fig_after_3)
+
+# fig_after_4 = plot_boxplot(
+#     df,
+#     :experience_level,
+#     :salary_log,
+#     group_order = sort(unique(df[!, :experience_level]))
+# )
+
+# save("plots/after/experience_vs_salary_log.svg", fig_after_4)
+
+# SECTION - finalne wykresy po preprocessingu
+
+# fig_final_1 = plot_histogram(df, :salary_in_usd, bins=30)
+# save("plots/after/final/salary_standardized_histogram.svg", fig_final_1)
+
+
+# fig_final_2 = plot_boxplot(
+#     df,
+#     :experience_level,
+#     :salary_in_usd,
+#     group_order = [1, 2, 3, 4]
+# )
+# save("plots/after/final/experience_vs_salary_standardized.svg", fig_final_2)
+
+
+# fig_final_3 = plot_boxplot(
+#     df,
+#     :remote_ratio_plot,
+#     :salary_in_usd,
+#     group_order = ["on_site", "remote", "hybrid"]
+# )
+# save("plots/after/final/remote_vs_salary_standardized.svg", fig_final_3)
+
+
+# job_cols = filter(col -> startswith(String(col), "job_title_"), Symbol.(names(df)))
+# job_counts = [sum(df[!, col]) for col in job_cols]
+# job_labels = replace.(String.(job_cols), "job_title_" => "")
+
+# fig_final_4 = Figure()
+# ax = Axis(
+#     fig_final_4[1, 1],
+#     xticks = (1:length(job_labels), job_labels),
+#     xticklabelrotation = pi / 4
+# )
+# barplot!(ax, 1:length(job_labels), job_counts)
+
+# save("plots/after/final/job_title_onehot_counts.svg", fig_final_4)
+
+# display(fig_final_1)
+# display(fig_final_2)
+# display(fig_final_3)
+# display(fig_final_4)
