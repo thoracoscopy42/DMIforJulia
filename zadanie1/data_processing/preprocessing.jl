@@ -45,21 +45,22 @@ end
 
 
 function detect_outliers_iqr(df::DataFrame, cols::Vector{Symbol})
+
     outlier_mask = falses(nrow(df))
 
     for col in cols
 
-        x = df[!, col]
+        current_col = df[!, col]
 
-        q1 = quantile(x, 0.25)
-        q3 = quantile(x, 0.75)
+        q1 = quantile(current_col, 0.25)
+        q3 = quantile(current_col, 0.75)
 
         iqr = q3 - q1
 
         lower = q1 - iqr * 1.5
         upper = q3 + iqr * 1.5
 
-        col_mask = (x .< lower) .| (x .> upper)
+        col_mask = (current_col .< lower) .| (current_col .> upper)
 
         
         outlier_mask .|= col_mask
@@ -83,12 +84,41 @@ end
 # !missing values
 
 function impute_missing!(df::DataFrame)
-    
+
+    divided_columns = split_columns_by_type(df)
+
+    numeric_cols = divided_columns.numeric
+    categorical_cols = divided_columns.categorical
+
+    for col in numeric_cols
+        if any(ismissing, df[!, col])
+            med = median(skipmissing(df[!, col]))
+            replace!(df[!, col], missing => med)
+        end
+    end
+
+    for col in categorical_cols
+        if any(ismissing, df[!, col])
+            most_common = mode(skipmissing(df[!, col]))
+            replace!(df[!, col], missing => most_common)
+        end
+    end
+
+    return df
 end
 
 # !encoding
 
-function ordinal_encode!(df::DataFrame, col::Symbol, mapping::Dict)
+function ordinal_encode!(df::DataFrame, col::Symbol, dict::Dict)
+
+    df[!,col] = get.(Ref(dict), df[!,col], missing)
+
+    return df
+end
+
+function one_hot_encode!(df::DataFrame, col::Symbol)
+    
+
 
 end
 
@@ -100,13 +130,4 @@ end
 
 function normalize_minmax!(df::DataFrame, cols::Vector{Symbol})
 
-end
-
-# !helpers
-
-function map_col_by_dict(df::DataFrame,col::Symbol,dict::Dict)
-
-    df[!,col] = get.(Ref(dict), df[!,col], missing)
-
-    return df
 end
