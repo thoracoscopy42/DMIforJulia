@@ -1,14 +1,4 @@
 
-#SECTION - Main function 
-
-function prepare_for_modeling!(df::DataFrame, config::Dict)
-
-    divided_columns = split_columns_by_type(df)
-
-
-end
-
-
 # !column helpers
 
 function split_columns_by_type(df::DataFrame)
