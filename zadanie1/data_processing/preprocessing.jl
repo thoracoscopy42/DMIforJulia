@@ -8,7 +8,6 @@ function prepare_for_modeling!(df::DataFrame, config::Dict)
 
 end
 
-#TODO - below
 
 # !column helpers
 
@@ -117,17 +116,61 @@ function ordinal_encode!(df::DataFrame, col::Symbol, dict::Dict)
 end
 
 function one_hot_encode!(df::DataFrame, col::Symbol)
-    
+    categories = unique(skipmissing(df[!, col]))
 
+    for category in categories
+        new_col = Symbol(string(col), "_", string(category))
+        df[!, new_col] = Int.(coalesce.(df[!, col] .== category, false))
+    end
 
+    select!(df, Not(col))
+    return df
 end
 
 # !scaling
 
 function standardize_columns!(df::DataFrame, cols::Vector{Symbol})
 
+    for col in cols
+
+        current_col = df[!, col]
+
+        μ = mean(current_col)
+        σ = std(current_col)
+
+        if σ == 0
+            df[!, col] = fill(0.0, nrow(df))
+        else
+            df[!, col] = (current_col .- μ) ./ σ
+        end
+    end
+
+    return df
 end
 
 function normalize_minmax!(df::DataFrame, cols::Vector{Symbol})
+    
+    for col in cols
 
+        current_col = df[!, col]
+
+        min_val = minimum(current_col)
+        max_val = maximum(current_col)
+
+        if max_val == min_val
+            df[!, col] = fill(0.0, nrow(df))
+        else
+            df[!, col] = (current_col .- min_val) ./ (max_val - min_val)
+        end
+    end
+
+    return df
+end
+
+# !helpers
+function add_log_column!(df::DataFrame, source_col::Symbol, new_col::Symbol)
+
+    df[!, new_col] = log.(1 .+ df[!, source_col])
+
+    return df
 end

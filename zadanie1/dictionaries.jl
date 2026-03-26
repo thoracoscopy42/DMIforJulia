@@ -29,3 +29,8 @@ location = Dict(
     "Africa"        => 3,
 )
 
+remote = Dict(
+    0               => "on_site",
+    50              => "hybrid",
+    100             => "remote"
+)
