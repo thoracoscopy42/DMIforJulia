@@ -1,7 +1,4 @@
-
-function load_data(filepath::AbstractString)
-
-    df = CSV.read(filepath, DataFrame)
-
+function load_file(path)
+    df = CSV.read(path, DataFrame)
     return df
 end
