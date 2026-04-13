@@ -34,11 +34,57 @@ function ordinal_encode_unordered!(df::DataFrame, col::Symbol, levels::Vector{St
     return df
 end
 
-function divide_dataset(df::DataFrame, target::Symbol)
+function split_dataset(df::DataFrame, target::Symbol)
 
     y = df[!, target]
 
     X = select!(df, Not(target))
 
     return X, y
+end
+
+function create_salary_class!(df::DataFrame)
+
+    q05 = quantile(df.salary_in_usd, 0.05)
+    q30 = quantile(df.salary_in_usd, 0.30)
+    q70 = quantile(df.salary_in_usd, 0.70)
+    q95 = quantile(df.salary_in_usd, 0.95)
+
+    df.salary_class = map(df.salary_in_usd) do s
+
+        if s ≤ q05
+            "very_low"
+
+        elseif s ≤ q30
+            "low"
+
+        elseif s ≤ q70
+            "mid"
+
+        elseif s ≤ q95
+            "high"
+
+        else
+            "very_high"
+
+        end
+
+    end
+
+    df.salary_class = categorical(
+        df.salary_class;
+        ordered=true,
+        levels=[
+            "very_low",
+            "low",
+            "mid",
+            "high",
+            "very_high"
+        ]
+    )
+
+    select!(df, Not(:salary_in_usd))
+    
+    return df
+
 end
