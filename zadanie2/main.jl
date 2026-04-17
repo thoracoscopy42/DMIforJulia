@@ -19,7 +19,20 @@ include("data_processing/processing.jl")
 df =preprocess_and_map("dictionaries_data/SalariesInDataScience.csv")
 
 #categorization of cols, and adding proper scitypes
-categorize_cols(df)
+
+X, y = split_dataset(df, :salary_in_usd)
+
+
+train, test =
+    partition(eachindex(y),
+              0.7,
+              shuffle=true,
+              rng=173)
+
+
+
+X = categorize_cols!(X)
+y = categorize_salary!(y)
 
 # schema(df) returns this, which means there is no need to coaerse!() the data, as scitypes are compatible with MLJ library
 # ┌──────────────────┬──────────────────┬────────────────────────────────────┐
@@ -34,11 +47,6 @@ categorize_cols(df)
 # │ remote_type      │ Multiclass{3}    │ CategoricalValue{String, UInt32}   │
 # └──────────────────┴──────────────────┴────────────────────────────────────┘
 
-X, y = split_dataset(df, :salary_in_usd)
 
 
-train, test =
-    partition(eachindex(y),
-              0.7,
-              shuffle=true,
-              rng=123)
+

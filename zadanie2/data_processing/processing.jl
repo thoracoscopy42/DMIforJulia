@@ -1,4 +1,4 @@
-function categorize_cols(df::DataFrame)
+function categorize_cols!(df::DataFrame)
 
     df.experience_level = categorical(
 
@@ -21,7 +21,28 @@ function categorize_cols(df::DataFrame)
 
 end
 
+
+function categorize_salary!(col)
+    
+    q05, q30, q70,q95 = quantile(col, [0.05, 0.30, 0.70, 0.95])
+
+    col = cut(
+        #column
+        col,
+        #ranges for categorization
+        [-Inf, q05, q30, q70, q95, Inf];
+        #category for each range
+        labels=["very_low", "low", "mid", "high", "very_high"]
+    )
+
+    return col
+end
+
+
+
+
 function split_dataset(df::DataFrame, target::Symbol)
     y, X = unpack(df, ==(target))
     return X, y
 end
+

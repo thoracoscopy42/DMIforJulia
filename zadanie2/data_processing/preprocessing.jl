@@ -15,8 +15,6 @@ function preprocess_and_map(path::AbstractString)
     map_column!(df, :company_location, :continents, countries)
     map_column!(df, :job_title, :job_titles, job_titles)
     map_column!(df, :remote_ratio, :remote_type, remote)
-    
-    create_salary_class!(df, :salary_in_usd)
 
     dropmissing!(df)
 
@@ -43,23 +41,3 @@ function map_column!(df::DataFrame, source_col::Symbol, new_col::Symbol, dict::D
 
     return df
 end
-
-
-function create_salary_class!(df::DataFrame, col::Symbol)
-    
-    q05, q30, q70,q95 = quantile(df[!, col], [0.05, 0.30, 0.70, 0.95])
-
-    df[!, col] = cut(
-        #column
-        df[!, col],
-        #ranges for categorization
-        [-Inf, q05, q30, q70, q95, Inf];
-        #category for each range
-        labels=["very_low", "low", "mid", "high", "very_high"]
-    )
-
-    return df
-end
-
-
-
