@@ -18,4 +18,5 @@ include("data_processing/tree.model.jl")
 
 df =preprocess_and_map("dictionaries_data/SalariesInDataScience.csv")
 
-
+categorize_cols(df)
+schema(df)
