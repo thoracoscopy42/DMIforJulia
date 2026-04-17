@@ -7,8 +7,7 @@ function preprocess_and_map(path::AbstractString)
     cols_for_removal = [:salary, :salary_currency, :employee_residence, :work_year]
     remove_cols!(df, cols_for_removal)
     
-    dropmissing!(df)
-
+    
     #import smaller categories for job titles and countries
     countries  = load_dict_from_csv("dictionaries_data/countries.csv")
     job_titles = load_dict_from_csv("dictionaries_data/job_titles.csv")
@@ -16,6 +15,8 @@ function preprocess_and_map(path::AbstractString)
     map_column!(df, :company_location, :continents, countries)
     map_column!(df, :job_title, :job_titles, job_titles)
     map_column!(df, :remote_ratio, :remote_type, remote)
+    
+    dropmissing!(df)
 
     return df
 end
