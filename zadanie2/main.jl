@@ -6,47 +6,51 @@ using StatsBase
 using CategoricalArrays
 using MLJDecisionTreeInterface
 
-#helpers
+# helpers
 include("data_processing/loader.jl")
 include("dictionaries_data/dictionaries.jl")
-#working with data
+
+# working with data
 include("data_processing/preprocessing.jl")
 include("data_processing/processing.jl")
-#modeling
 
+# Load and preprocess raw data
+df = preprocess_and_map("dictionaries_data/SalariesInDataScience.csv")
 
-# preprocessing improved a bit from zadanie1
-df =preprocess_and_map("dictionaries_data/SalariesInDataScience.csv")
+# Create helper strata from raw salary values for stratified split
+split_strata = make_split_strata(df.salary_in_usd)
 
-#categorization of cols, and adding proper scitypes
+# Perform stratified train/test split
+train_idx, test_idx = partition(
+    eachindex(split_strata),
+    0.7,
+    shuffle=true,
+    stratify=split_strata,
+    rng=173
+)
 
-X, y = split_dataset(df, :salary_in_usd)
+# Split the full dataframe first
+train_df = df[train_idx, :]
+test_df  = df[test_idx, :]
 
+# Fit salary class boundaries using train data only
+salary_edges = fit_salary_edges(train_df.salary_in_usd)
 
-train, test =
-    partition(eachindex(y),
-              0.7,
-              shuffle=true,
-              rng=173)
+# Apply the same class boundaries to both train and test targets
+train_df.salary_in_usd = apply_salary_categories(train_df.salary_in_usd, salary_edges)
+test_df.salary_in_usd  = apply_salary_categories(test_df.salary_in_usd, salary_edges)
 
+# Convert feature columns to categorical types after the split
+train_df = categorize_cols!(train_df)
+test_df  = categorize_cols!(test_df)
 
+# Split into features and target
+Xtrain, ytrain = split_dataset(train_df, :salary_in_usd)
+Xtest, ytest   = split_dataset(test_df, :salary_in_usd)
 
-X = categorize_cols!(X)
-y = categorize_salary!(y)
+# Optional schema check
+println("Train schema:")
+schema(train_df)
 
-# schema(df) returns this, which means there is no need to coaerse!() the data, as scitypes are compatible with MLJ library
-# ┌──────────────────┬──────────────────┬────────────────────────────────────┐
-# │ names            │ scitypes         │ types                              │
-# ├──────────────────┼──────────────────┼────────────────────────────────────┤
-# │ experience_level │ OrderedFactor{4} │ CategoricalValue{String3, UInt32}  │
-# │ employment_type  │ Multiclass{4}    │ CategoricalValue{String3, UInt32}  │
-# │ salary_in_usd    │ OrderedFactor{5} │ CategoricalValue{String, UInt32}   │
-# │ company_size     │ OrderedFactor{3} │ CategoricalValue{String1, UInt32}  │
-# │ continents       │ Multiclass{6}    │ CategoricalValue{String15, UInt32} │
-# │ job_titles       │ Multiclass{8}    │ CategoricalValue{String, UInt32}   │
-# │ remote_type      │ Multiclass{3}    │ CategoricalValue{String, UInt32}   │
-# └──────────────────┴──────────────────┴────────────────────────────────────┘
-
-
-
-
+println("\nTest schema:")
+schema(test_df)
