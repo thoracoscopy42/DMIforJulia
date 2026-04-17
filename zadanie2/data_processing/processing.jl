@@ -20,3 +20,8 @@ function categorize_cols(df::DataFrame)
     df.remote_type = categorical(df.remote_type, ordered=false)
 
 end
+
+function split_dataset(df::DataFrame, target::Symbol)
+    y, X = unpack(df, ==(target))
+    return X, y
+end
