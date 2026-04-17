@@ -1,0 +1,75 @@
+Benchmark summary
+=================
+
+Top configurations by balanced accuracy:
+
+Rank 1
+  model: Decision Tree
+  feature set: all_features
+  number of features: 6
+  accuracy: 0.4554
+  balanced accuracy: 0.3119
+
+Rank 2
+  model: EvoTree
+  feature set: all_features
+  number of features: 6
+  accuracy: 0.456
+  balanced accuracy: 0.3087
+
+Rank 3
+  model: Random Forest
+  feature set: all_features
+  number of features: 6
+  accuracy: 0.4553
+  balanced accuracy: 0.3077
+
+Rank 4
+  model: EvoTree
+  feature set: without_job_title
+  number of features: 5
+  accuracy: 0.4463
+  balanced accuracy: 0.3074
+
+Rank 5
+  model: Decision Tree
+  feature set: without_job_title
+  number of features: 5
+  accuracy: 0.4465
+  balanced accuracy: 0.3073
+
+Rank 6
+  model: Random Forest
+  feature set: without_job_title
+  number of features: 5
+  accuracy: 0.4464
+  balanced accuracy: 0.3067
+
+Rank 7
+  model: Multinomial
+  feature set: all_features
+  number of features: 6
+  accuracy: 0.4515
+  balanced accuracy: 0.3058
+
+Rank 8
+  model: Multinomial
+  feature set: without_job_title
+  number of features: 5
+  accuracy: 0.4436
+  balanced accuracy: 0.2845
+
+Rank 9
+  model: KNN
+  feature set: all_features
+  number of features: 6
+  accuracy: 0.3209
+  balanced accuracy: 0.2755
+
+Rank 10
+  model: KNN
+  feature set: role_and_seniority
+  number of features: 3
+  accuracy: 0.3443
+  balanced accuracy: 0.2661
+

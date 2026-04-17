@@ -1,0 +1,26 @@
+model,feature_set,n_features,accuracy,balanced_accuracy
+Decision Tree,without_location,5,0.4366,0.2568
+Decision Tree,without_job_title,5,0.4465,0.3073
+Decision Tree,role_and_seniority,3,0.433,0.251
+Decision Tree,all_features,6,0.4554,0.3119
+Decision Tree,core_only,3,0.4238,0.2365
+Random Forest,without_location,5,0.4356,0.2529
+Random Forest,without_job_title,5,0.4464,0.3067
+Random Forest,role_and_seniority,3,0.4328,0.2503
+Random Forest,all_features,6,0.4553,0.3077
+Random Forest,core_only,3,0.4237,0.2363
+KNN,without_location,5,0.2957,0.2256
+KNN,without_job_title,5,0.2844,0.2547
+KNN,role_and_seniority,3,0.3443,0.2661
+KNN,all_features,6,0.3209,0.2755
+KNN,core_only,3,0.2814,0.1927
+Multinomial,without_location,5,0.4315,0.2453
+Multinomial,without_job_title,5,0.4436,0.2845
+Multinomial,role_and_seniority,3,0.4315,0.248
+Multinomial,all_features,6,0.4515,0.3058
+Multinomial,core_only,3,0.4246,0.2318
+EvoTree,without_location,5,0.4361,0.2535
+EvoTree,without_job_title,5,0.4463,0.3074
+EvoTree,role_and_seniority,3,0.4329,0.2505
+EvoTree,all_features,6,0.456,0.3087
+EvoTree,core_only,3,0.4238,0.2367
